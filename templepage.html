@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en-US" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <title>Portfolio Project – Tester</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --nav-height: 64px;
+      --nav-height-min: 40px;
+      --nav-bg: #23272f;
+      --nav-color: #fff;
+      --accent: #4b9cff;
+      --body-bg: #f4f6fa;
+      --text-color: #23272f;
+      --container-bg: #fff;
+      --container-shadow: 0 4px 18px rgba(75, 156, 255, 0.08);
+      --footer-bg: #23272f;
+      --footer-color: #fff;
+      --scrollbar-bg: #e5e9f0;
+      --scrollbar-thumb: #b0b7c3;
+      --scrollbar-thumb-hover: #4b9cff;
+      --transition: 0.3s cubic-bezier(.4,0,.2,1);
+    }
+
+    [data-theme="dark"] {
+      --nav-bg: #181c23;
+      --nav-color: #f1f3f7;
+      --accent: #5bb8ff;
+      --body-bg: #121212;
+      --text-color: #f1f3f7;
+      --container-bg: #23272f;
+      --container-shadow: 0 4px 24px rgba(75, 156, 255, 0.15);
+      --footer-bg: #181c23;
+      --footer-color: #f1f3f7;
+      --scrollbar-bg: #23272f;
+      --scrollbar-thumb: #4b9cff;
+      --scrollbar-thumb-hover: #5bb8ff;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--body-bg);
+      color: var(--text-color);
+      transition: background var(--transition), color var(--transition);
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: var(--body-bg);
+      color: var(--text-color);
+    }
+
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+      width: 12px;
+      background: var(--scrollbar-bg);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--scrollbar-thumb);
+      border-radius: 6px;
+      transition: background 0.3s;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--scrollbar-thumb-hover);
+    }
+    html {
+      scrollbar-width: thin;
+      scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg);
+    }
+
+    /* NAVIGATION BAR */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: var(--nav-height);
+      background: var(--nav-bg);
+      color: var(--nav-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+      z-index: 100;
+      transition: height var(--transition), box-shadow var(--transition), background var(--transition), color var(--transition);
+    }
+
+    nav.minimized {
+      height: var(--nav-height-min);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-back {
+      position: absolute;
+      left: 24px;
+      background: none;
+      border: none;
+      color: var(--nav-color);
+      font-size: 1.5rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      text-decoration: none;
+      user-select: none;
+      transition: background 0.15s;
+    }
+    .nav-back:focus,
+    .nav-back:hover {
+      background: rgba(75, 156, 255, 0.15);
+      outline: none;
+    }
+
+    .nav-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      user-select: none;
+    }
+
+    main {
+      flex: 1 0 auto;
+      margin-top: var(--nav-height);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 32px 16px 80px 16px;
+      min-height: 70vh;
+      background: var(--body-bg);
+      transition: background var(--transition);
+    }
+
+    .project-details-container {
+      width: 100%;
+      max-width: 720px;
+      background: var(--container-bg);
+      border-radius: 12px;
+      box-shadow: var(--container-shadow);
+      padding: 32px 28px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transition: background var(--transition), box-shadow var(--transition);
+    }
+
+    .project-details-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 8px;
+      letter-spacing: 0.5px;
+      transition: color var(--transition);
+    }
+
+    .project-details-text {
+      font-size: 1.1rem;
+      line-height: 1.7;
+      color: var(--text-color);
+      white-space: pre-wrap;
+      transition: color var(--transition);
+    }
+
+    /* FOOTER */
+    footer {
+      width: 100vw;
+      background: var(--footer-bg);
+      color: var(--footer-color);
+      text-align: center;
+      font-size: 1rem;
+      padding: 18px 0 14px 0;
+      letter-spacing: 0.3px;
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      z-index: 50;
+      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+      transition: background var(--transition), color var(--transition);
+    }
+
+    @media (max-width: 600px) {
+      .project-details-container {
+        padding: 18px 8px;
+      }
+      nav {
+        height: 54px;
+      }
+      nav.minimized {
+        height: 36px;
+      }
+      main {
+        margin-top: 54px;
+        padding: 20px 4px 70px 4px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVIGATION BAR -->
+  <nav id="navbar" aria-label="Main Navigation">
+    <a href="index.html" 
+       class="nav-back" 
+       aria-label="Go Back to Main Page" 
+       title="Back to Mainpage" 
+       role="button" 
+       tabindex="0">
+      &#8592; <span style="font-size: 1rem;">Back</span>
+    </a>
+    <span class="nav-title" aria-current="page">Webpage</span>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main>
+    <div class="project-details-container">
+      <div class="project-details-title">Pashupatinath Temple</div>
+      <div class="project-details-text" id="projectText">
+       During my college project, We have developed a fully functional website dedicated to showcasing the cultural and spiritual significance of the Pashupatinath Temple. The website was thoughtfully divided into three major sections: Home, Gallery, and Contact. The Home section provided visitors with an engaging overview of the temple’s history, importance, and key features, serving as the primary landing page. The Gallery section offered a visually rich experience by displaying a well-organized collection of images, capturing various aspects of the temple, its architecture,rituals, and surroundings, which helped to immerse users in the temple’s atmosphere. Lastly, the Contact section was designed to enable easy communication between visitors and our team, incorporating user-friendly forms and clear contact information to facilitate inquiries and feedback. Throughout the development process, careful attention was given to ensuring a responsive and accessible design, with intuitive navigation and aesthetic appeal, aimed at providing users with a seamless and informative browsing experience. This project strengthened my web development skills and enhanced my understanding of creating culturally relevant digital content.
+       <a href="https://sushantdev170.github.io/Pashupatinath_Temple/" target="_blank" rel="noopener noreferrer">Visit website</a>
+    </a>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    &copy; 2025 Sushant Mainali. All rights reserved.
+  </footer>
+
+  <!-- JAVASCRIPT -->
+  <script>
+    // Navbar minimize on scroll
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 40) {
+        navbar.classList.add('minimized');
+      } else {
+        navbar.classList.remove('minimized');
+      }
+    });
+
+    // Theme sync: apply theme from localStorage and listen for changes
+    const htmlEl = document.documentElement;
+    function applyThemeFromStorage() {
+      let theme = localStorage.getItem('theme');
+      if (!theme) {
+        theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      htmlEl.setAttribute('data-theme', theme);
+    }
+    applyThemeFromStorage();
+
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'theme') {
+        applyThemeFromStorage();
+      }
+    });
+  </script>
+</body>
+</html>

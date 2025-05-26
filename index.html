@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>
+  // Apply theme immediately to prevent flicker
+  (function() {
+    const savedTheme = localStorage.getItem('theme') || 
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  })();
+</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sushant Mainali | Cybersecurity Enthusiast</title>
+  <meta name="description" content="Sushant Mainali - Cybersecurity Enthusiast Portfolio. Projects, certifications, and contact." />
+  <meta property="og:title" content="Sushant Mainali | Cybersecurity Enthusiast" />
+  <meta property="og:description" content="Explore Sushant Mainali's cybersecurity projects, certifications, and connect directly." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="image/og-preview.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Fira+Code&display=swap">
+  <style>
+    :root {
+      --primary: #1e90ff;
+      --primary-dark: #3742fa;
+      --accent: #70a1ff;
+      --bg-gradient: linear-gradient(to right, #f4f6f8, #e9eef3);
+      --header-gradient: linear-gradient(135deg, #1e272e, #2f3640);
+      --nav-bg: #2f3542;
+      --footer-bg: #1e272e;
+      --text-main: #2c3e50;
+      --text-light: #dcdde1;
+      --shadow: 0 8px 24px rgba(30, 144, 255, 0.07);
+      --radius: 15px;
+      --transition: 0.3s cubic-bezier(.4,2,.6,1);
+      --scrollbar: #70a1ff;
+      --progress: #1e90ff;
+    }
+    [data-theme="dark"] {
+      --primary: #70a1ff;
+      --primary-dark: #1e90ff;
+      --accent: #3742fa;
+      --bg-gradient: linear-gradient(to right, #23272e, #2f3542);
+      --header-gradient: linear-gradient(135deg, #181c20, #23272e);
+      --nav-bg: #23272e;
+      --footer-bg: #181c20;
+      --text-main: #f1f2f6;
+      --text-light: #a4b0be;
+      --shadow: 0 8px 32px rgba(30,144,255,0.12);
+      --scrollbar: #3742fa;
+      --progress: #70a1ff;
+    }
+    html { scroll-behavior: smooth;}
+    body {
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      line-height: 1.6;
+      transition: background 0.4s, color 0.4s;
+    }
+    ::selection { background: var(--primary); color: #fff; }
+    ::-webkit-scrollbar { width: 10px; background: transparent;}
+    ::-webkit-scrollbar-thumb { background: var(--scrollbar); border-radius: 8px;}
+    .skip-link {
+      position: absolute;
+      left: -999px;
+      top: 10px;
+      background: var(--primary);
+      color: #fff;
+      padding: 0.5rem 1rem;
+      z-index: 10000;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: left 0.2s;
+    }
+    .skip-link:focus {
+      left: 10px;
+    }
+    #progressBar {
+      position: fixed;
+      top: 0; left: 0;
+      width: 0;
+      height: 4px;
+      background: var(--progress);
+      z-index: 3000;
+      transition: width 0.2s;
+    }
+    header {
+      background: var(--header-gradient);
+      color: white;
+      padding: 3rem 1rem 2rem 1rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    header .particles-bg-canvas {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+    header > .container {
+      position: relative;
+      z-index: 2;
+    }
+    header::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 40px;
+      background: linear-gradient(to top, rgba(30,39,46,0.2), transparent);
+      pointer-events: none;
+      z-index: 1;
+    }
+    header h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 2px 16px rgba(30,144,255,0.1);
+      animation: fadeInDown 1s;
+    }
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-30px);}
+      to { opacity: 1; transform: none;}
+    }
+    header p.subtitle {
+      font-size: 1.3rem;
+      color: var(--text-light);
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.5px;
+      min-height: 1.7em;
+      animation: fadeInDown 1.2s;
+      font-family: 'Fira Code', monospace;
+    }
+    header p.email a {
+      color: var(--accent);
+      text-decoration: underline dotted;
+      font-size: 1rem;
+      transition: color var(--transition);
+      word-break: break-all;
+    }
+    header p.email a:hover { color: var(--primary); }
+    .theme-toggle {
+      position: absolute;
+      top: 1.5rem;
+      right: 2rem;
+      background: var(--nav-bg);
+      color: var(--accent);
+      border: none;
+      border-radius: 50%;
+      width: 44px; height: 44px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(30,144,255,0.09);
+      transition: background 0.3s, color 0.3s;
+      z-index: 20;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .theme-toggle:focus { outline: 2px solid var(--primary);}
+    nav {
+      background: var(--nav-bg);
+      padding: 0.7rem 0;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.10);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      transition: box-shadow 0.2s;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin: 0; padding: 0;
+    }
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: background var(--transition), color var(--transition);
+      outline: none;
+      position: relative;
+    }
+    nav ul li a.active, nav ul li a:focus, nav ul li a:hover {
+      color: var(--accent);
+      background: rgba(112,161,255,0.08);
+    }
+    section {
+      padding: 4rem 1rem;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s cubic-bezier(.4,2,.6,1), transform 0.8s cubic-bezier(.4,2,.6,1);
+      will-change: opacity, transform;
+    }
+    section.visible {
+      opacity: 1;
+      transform: none;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+    h2 {
+      font-size: 2.3rem;
+      margin-bottom: 1.5rem;
+      color: #1e272e;
+      border-left: 5px solid var(--primary);
+      padding-left: 0.7rem;
+      letter-spacing: 1px;
+      background: linear-gradient(90deg,#fff, #f1f6fa 60%);
+      border-radius: 6px;
+      display: inline-block;
+      transition: color 0.3s;
+    }
+    [data-theme="dark"] h2 { color: #f1f2f6; background: linear-gradient(90deg,#23272e, #2f3542 60%);}
+    #about .container { animation: none;}
+    .project-filter {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+.project-filter button {
+  background: var(--nav-bg);
+  color: var(--text-light);
+  border: none;
+  border-radius: 6px;
+  padding: 0.45rem 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.project-filter button.active, .project-filter button:focus {
+  background: var(--primary);
+  color: #fff;
+  outline: 2px solid var(--primary);
+}
+.project-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+}
+.project {
+  background: white;
+  padding: 2rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  transition: transform var(--transition), box-shadow var(--transition), background 0.4s;
+  position: relative;
+  overflow: hidden;
+  min-height: 220px;
+}
+[data-theme="dark"] .project { 
+  background: #23272e; 
+  color: #f1f2f6;
+}
+.project::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 5px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  opacity: 0.15;
+  transition: opacity var(--transition);
+}
+.project:hover, .project:focus {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 12px 32px rgba(30,144,255,0.12);
+  z-index: 2;
+}
+.project h3 {
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+  font-size: 1.3rem;
+  font-family: 'Fira Code', monospace;
+}
+.project p {
+  color: #333333;
+  font-size: 1.05rem;
+}
+
+/* FIXED dark mode paragraph color */
+[data-theme="dark"] .project p {
+  color: #f1f2f6;
+}
+
+.certification-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+    .certification a {
+      display: block;
+      position: relative;
+      outline: none;
+      border-radius: 8px;
+      box-shadow: 0 1px 8px rgba(30,144,255,0.06);
+      transition: box-shadow var(--transition), transform var(--transition);
+      overflow: hidden;
+    }
+    .certification img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      display: block;
+      transition: transform 0.4s cubic-bezier(.4,2,.6,1), filter 0.4s;
+      filter: grayscale(60%) brightness(0.92);
+    }
+    .certification a:focus img,
+    .certification a:hover img {
+      filter: none;
+      transform: scale(1.05) rotate(-1.5deg);
+      box-shadow: 0 4px 24px var(--primary);
+      z-index: 2;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      background: #ffffff;
+      padding: 2rem;
+      border-radius: var(--radius);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+      max-width: 500px;
+      margin: 0 auto;
+      animation: fadeIn 1.2s;
+      position: relative;
+    }
+    [data-theme="dark"] form { background: #23272e; color: #f1f2f6;}
+    form input, form textarea {
+      padding: 1rem;
+      border: 1.5px solid #bcc4cd;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color var(--transition), box-shadow var(--transition), background 0.3s, color 0.3s;
+      background: inherit;
+      color: inherit;
+    }
+    form input:focus, form textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px var(--accent);
+      outline: none;
+    }
+    form textarea { min-height: 150px; resize: vertical;}
+    form button {
+      padding: 1rem;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: background var(--transition), transform var(--transition);
+      box-shadow: 0 2px 8px rgba(30,144,255,0.07);
+    }
+    form button:hover, form button:focus {
+      background: var(--primary-dark);
+      transform: translateY(-2px) scale(1.03);
+    }
+    .spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid var(--primary);
+      border-radius: 50%;
+      width: 30px; height: 30px;
+      animation: spin 1s linear infinite;
+      position: absolute;
+      right: 1.5rem; top: 1.5rem;
+      display: none;
+      z-index: 10;
+    }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+    .form-message {
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 1.08rem;
+      font-weight: 600;
+      color: var(--primary);
+      display: none;
+    }
+    .form-message.error { color: #e74c3c;}
+    footer {
+      background: var(--footer-bg);
+      color: white;
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.95rem;
+      letter-spacing: 0.5px;
+      margin-top: 2rem;
+      border-top-left-radius: var(--radius);
+      border-top-right-radius: var(--radius);
+    }
+    #scrollTopBtn {
+      position: fixed;
+      right: 2rem;
+      bottom: 2rem;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      font-size: 2rem;
+      cursor: pointer;
+      box-shadow: 0 4px 24px rgba(30,144,255,0.13);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s, transform 0.3s;
+      z-index: 2000;
+    }
+    #scrollTopBtn.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: scale(1.08);
+    }
+    @media (max-width: 900px) {
+      .project-list, .certification-list { gap: 1.2rem;}
+      section { padding: 2.5rem 0.5rem;}
+      h2 { font-size: 2rem;}
+    }
+    @media (max-width: 600px) {
+      header h1 { font-size: 2rem;}
+      nav ul { flex-direction: column; gap: 0.5rem;}
+      .project-list, .certification-list { grid-template-columns: 1fr;}
+      section { padding: 2rem 0.2rem;}
+      form { padding: 1rem;}
+      .theme-toggle { right: 1rem; top: 1rem;}
+    }
+    a:focus, button:focus, input:focus, textarea:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; animation: none !important;}
+    }
+    html[data-theme="light"] {
+  --bg: #ffffff;
+  --text: #000000;
+}
+html[data-theme="dark"] {
+  --bg: #121212;
+  --text: #f1f1f1;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+  </style>
+</head>
+<body>
+  
+  <a href="#about" class="skip-link">Skip to main content</a>
+  <div id="progressBar"></div>
+  <header>
+    <canvas id="particlesBg" class="particles-bg-canvas" aria-hidden="true"></canvas>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark/light mode" title="Change Theme">🌙</button>
+    <div class="container">
+      <h1>Sushant Mainali</h1>
+      <p class="subtitle" id="subtitleTyped"></p>
+      <p class="email">
+        <a href="mailto:sushant.mainali170@gmail.com?subject=Portfolio%20Inquiry&body=Hi%20Sushant,%0A%0AI%20wanted%20to%20discuss%20your%20portfolio.%20Looking%20forward%20to%20hearing%20from%20you!">
+          sushant.mainali170@gmail.com
+        </a>
+      </p>
+    </div>
+  </header>
+  <nav aria-label="Main navigation">
+    <ul>
+      <li><a href="#about" class="nav-link">About</a></li>
+      <li><a href="#projects" class="nav-link">Projects</a></li>
+      <li><a href="#certifications" class="nav-link">Certifications</a></li>
+      <li><a href="#contact" class="nav-link">Contact</a></li>
+    </ul>
+  </nav>
+  <main id="main-content">
+  <section id="about">
+    <div class="container">
+      <h2>About Me</h2>
+      <p>Hello, my name is Sushant Mainali. I am a developer with a strong foundation in computer networking, having completed my Diploma in Computer Programming from Niagara College in Toronto. 
+        I am a highly motivated and enthusiastic individual, constantly seeking to learn and enhance my skills.</p>
+      <p>
+        Over the years, I have worked on a variety of projects, including security testing, UI/UX testing, and bug fixing during the Co-op job. 
+        Additionally, I developed the Xmarine mobile app using the C# programming language with Firebase integration.</p>
+      <p>
+        I have also worked on job simulation projects related to Mastercard cybersecurity, AWS Solutions Architecture, and DATACOM cybersecurity, aiming to broaden my knowledge and expertise in these areas.</p>
+      <p>In addition, I have a solid understanding of networking and hardware. 
+        My experience includes working with networking protocols such as TCP/IP, DNS, DHCP, and VPNs, as well as configuring and troubleshooting routers, switches, and firewalls. I am also familiar with network security concepts and best practices.</p>
+      <p>I am always eager to take on new challenges and continue developing both my technical and problem-solving abilities.</p>
+    </div>
+  </section>
+  <section id="projects">
+    <div class="container">
+      <h2>Projects</h2>
+      <div class="project-filter" id="projectFilter">
+        <button class="active" data-filter="all">All</button>
+        <button data-filter="web">Web</button>
+        <button data-filter="security">Security</button>
+        <button data-filter="app">App</button>
+      </div>
+      <div class="project-list" id="projectList">
+        <div class="project" id="project-0" data-project="0" data-type="security" onclick="window.location.href='tester.html?from=sushant.html'">
+          <h3>Tester</h3>
+          <p>During my Co-op placement, I served as the Testing Lead for our group’s project. 
+            My responsibilities included conducting comprehensive UI/UX testing to ensure an intuitive and visually consistent user interface. 
+            I meticulously verified button alignment, navigational flows, and functionality to enhance user experience. 
+            Additionally, I performed security testing, including login bypass assessments, to identify and address potential vulnerabilities, contributing to the overall quality and robustness of the application.
+          </p>
+        </div>
+        <div class="project" tabindex="0" data-project="1" data-type="web" onclick="window.location.href='templepage.html?from=sushant.html'">
+          <h3>Pashupatinath Temple</h3>
+          <p>This website was developed collaboratively as a group project with my friends. 
+            It highlights the Pashupatinath Temple, a renowned Hindu temple located in Kathmandu, Nepal, dedicated to Lord Shiva. 
+            Famous for its stunning pagoda-style architecture, the temple draws numerous pilgrims and tourists, particularly during the Maha Shivaratri festival. 
+            As an important cultural and religious landmark, Pashupatinath Temple is also recognized as a UNESCO World Heritage Site.</p>
+          </div>
+        </div>
+        <div class="project" tabindex="0" data-project="1" data-type="app">
+          <h3>GrocerEase</h3>
+          This application was developed as a collaborative group project, focusing on GrocerEase—an advanced Grocery Management System engineered to enhance inventory control, streamline user administration, and improve order tracking workflows. 
+          The solution leverages Microsoft PowerApps for the front-end interface and employs SharePoint as a centralized database to automate critical business processes. 
+          A key functionality of the system is the real-time synchronization of inventory levels upon order placement, effectively reducing manual errors and increasing operational efficiency across the supply chain.
+          </div>
+        <div class="project" tabindex="0" data-project="1" data-type="app">
+          <h3>QuickBite</h3>
+          <p>This application was developed collaboratively as a group project. 
+            QuickBite is a user-centric mobile app designed to streamline restaurant ordering by enabling direct interaction between customers and their preferred restaurants, thereby bypassing third-party platforms. 
+            Developed with Xamarin, C#, and XAML, QuickBite delivers a consistent, cross-platform experience across various devices. 
+            The app allows users to create personalized accounts, browse comprehensive menus, and place orders effortlessly. 
+            It prioritizes a clean and intuitive user interface, seamless navigation, and robust validation mechanisms to ensure reliability and an enhanced user experience.</p>
+          </div>
+      </div>
+    </div>
+  </section>
+  <section id="certifications">
+    <div class="container">
+      <h2>Certifications</h2>
+      <div class="certification-list">
+        <div class="certification">
+          <a href="certificate/CertificateOfCompletion_Career Essentials in Cybersecurity by Microsoft and LinkedIn (1).pdf" target="_blank">
+            <img src="image/LinkedIn CyberSecurity.png" alt="Certification 1" loading="lazy"/>
+          </a>
+        </div>
+        <div class="certification">
+          <a href="certificate/CertificateOfCompletion_Career Essentials in Data Analysis by Microsoft and LinkedIn.pdf" target="_blank">
+            <img src="image/LinkedIn Data Analysis.png" alt="Certification 2" loading="lazy"/>
+          </a>
+        </div>
+        <div class="certification">
+          <a href="certificate/CertificateOfCompletion_Career Essentials in Generative AI by Microsoft and LinkedIn.pdf" target="_blank">
+            <img src="image/LinkedIn Generative AI.png" alt="Certification 3" loading="lazy"/>
+          </a>
+        </div>
+        <div class="certification">
+          <a href="certificate/Coursera 8N64466QGXT2.pdf" target="_blank">
+            <img src="image/Google CyberSecurity.png" alt="Certification 4" loading="lazy"/>
+          </a>
+        </div>
+        <div class="certification">
+          <a href="certificate/kkE9HyeNcw6rwCRGw_pmnMSL4QiQ9JCgE3W_yinQWzgJusCHmFuRg_1733779177191_completion_certificate.pdf" target="_blank">
+            <img src="image/AWS Solutions.png" alt="Certification 4" loading="lazy"/>
+          </a>
+        </div>
+        <div class="certification">
+          <a href="certificate/vcKAB5yYAgvemepGQ_mfxGwGDp6WkQmtmTf_yinQWzgJusCHmFuRg_1733780416033_completion_certificate.pdf" target="_blank">
+            <img src="image/MasterCard CyberSecurity.png" alt="Certification 5" loading="lazy"/>
+          </a>
+        </div>
+        <div class="certification">
+          <a href="certificate/yTszJTvkHFBH6zAn3_gCW7Xki5Y3vNpBmnn_yinQWzgJusCHmFuRg_1745339420223_completion_certificate.pdf" target="_blank">
+            <img src="image/DataCom CyberSecurity.png" alt="Certification 6" loading="lazy"/>
+          </a>
+        </div>
+        <div class="certification">
+          <a href="certificate/UC-ecb11cd0-7a64-4e47-a3b4-3ae91ec444a2.pdf" target="_blank">
+            <img src="image/Screenshot 2025-04-30 222232.png" alt="Certification 6" loading="lazy"/>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section id="contact">
+    <div class="container">
+      <h2>Contact Me</h2>
+      <form id="contactForm" autocomplete="off">
+        <input type="text" name="name" placeholder="Your Name" required />
+        <input type="email" name="email" placeholder="Your Email" required />
+        <textarea name="message" placeholder="Your Message" required></textarea>
+        <button type="submit">Send Message</button>
+        <div class="spinner" id="formSpinner"></div>
+        <div class="form-message" id="formMessage" aria-live="polite"></div>
+      </form>
+    </div>
+  </section>
+  </main>
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 Sushant Mainali. Designed with precision and passion.</p>
+    </div>
+  </footer>
+  <button id="scrollTopBtn" aria-label="Scroll to top" title="Back to top">&uarr;</button>
+  
+  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+  <script>
+    // Theme Toggle
+    const themeToggle = document.getElementById('themeToggle');
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      themeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
+      localStorage.setItem('theme', theme);
+    }
+    themeToggle.onclick = () => {
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      setTheme(current === 'dark' ? 'light' : 'dark');
+    };
+    (function(){
+      const saved = localStorage.getItem('theme');
+      if(saved) setTheme(saved);
+      else if(window.matchMedia('(prefers-color-scheme: dark)').matches) setTheme('dark');
+      else setTheme('light');
+    })();
+
+    // Animated typing effect for subtitle
+    const subtitle = "Cybersecurity Enthusiast | Tech Explorer | Lifelong Learner";
+    const subtitleElem = document.getElementById('subtitleTyped');
+    let subtitleIndex = 0;
+    function typeSubtitle() {
+      if (subtitleElem) {
+        subtitleElem.textContent = subtitle.slice(0, subtitleIndex++);
+        if (subtitleIndex <= subtitle.length) setTimeout(typeSubtitle, 32);
+      }
+    }
+    typeSubtitle();
+
+    // Progress bar on scroll
+    const progressBar = document.getElementById('progressBar');
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.body.scrollHeight - window.innerHeight;
+      const scrolled = (scrollTop / docHeight) * 100;
+      progressBar.style.width = scrolled + "%";
+    });
+
+    // Section reveal on scroll
+    function revealSections() {
+      document.querySelectorAll('section').forEach(sec => {
+        const rect = sec.getBoundingClientRect();
+        if(rect.top < window.innerHeight - 60) sec.classList.add('visible');
+      });
+    }
+    window.addEventListener('scroll', revealSections);
+    window.addEventListener('DOMContentLoaded', revealSections);
+
+    // ScrollSpy (nav highlight)
+    const navLinks = document.querySelectorAll('.nav-link');
+    const sections = Array.from(document.querySelectorAll('section'));
+    window.addEventListener('scroll', () => {
+      let cur = sections[0];
+      for (const section of sections) {
+        if (window.scrollY >= section.offsetTop - 90) cur = section;
+      }
+      navLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + cur.id);
+      });
+    });
+
+    // Project filter
+    const filterBtns = document.querySelectorAll('#projectFilter button');
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.getAttribute('data-filter');
+        document.querySelectorAll('.project').forEach(proj => {
+          if(filter === 'all' || proj.dataset.type.includes(filter)) {
+            proj.style.display = '';
+          } else {
+            proj.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Contact form with spinner and user feedback (ARIA live)
+    (function () {
+      emailjs.init("RDL53Sk4XO4YOFzNg");
+    })();
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const form = this;
+      const msg = document.getElementById('formMessage');
+      const spinner = document.getElementById('formSpinner');
+      msg.style.display = 'none';
+      msg.textContent = '';
+      spinner.style.display = 'block';
+      form.querySelector('button[type="submit"]').disabled = true;
+      emailjs.sendForm("service_9eujndf", "template_g509fmm", form)
+        .then(function(response) {
+          spinner.style.display = 'none';
+          msg.textContent = "Thank you for your message. I will get back to you soon!";
+          msg.className = "form-message";
+          msg.style.display = 'block';
+          form.reset();
+          form.querySelector('button[type="submit"]').disabled = false;
+        }, function(error) {
+          spinner.style.display = 'none';
+          msg.textContent = "Something went wrong. Please try again.";
+          msg.className = "form-message error";
+          msg.style.display = 'block';
+          form.querySelector('button[type="submit"]').disabled = false;
+        });
+    });
+
+    // Scroll to top button
+    const scrollBtn = document.getElementById('scrollTopBtn');
+    window.addEventListener('scroll', function() {
+      if (window.scrollY > 300) {
+        scrollBtn.classList.add('show');
+      } else {
+        scrollBtn.classList.remove('show');
+      }
+    });
+    scrollBtn.addEventListener('click', function() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Smooth scroll for nav links (accessibility)
+    document.querySelectorAll('nav a[href^="#"]').forEach(link => {
+      link.addEventListener('click', function(e) {
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth' });
+          target.setAttribute('tabindex', '-1');
+          target.focus({ preventScroll: true });
+        }
+      });
+    });
+
+    // Animated particles background for header
+    function initParticles() {
+      const canvas = document.getElementById('particlesBg');
+      const header = document.querySelector('header');
+      if (!canvas || !header) return;
+      const ctx = canvas.getContext('2d');
+      let w = canvas.width = header.offsetWidth;
+      let h = canvas.height = header.offsetHeight;
+      let particles = [];
+      const num = Math.floor(w/30);
+      for(let i=0;i<num;i++) {
+        particles.push({
+          x: Math.random()*w,
+          y: Math.random()*h,
+          r: Math.random()*2+1,
+          dx: (Math.random()-0.5)*0.7,
+          dy: (Math.random()-0.5)*0.7,
+          o: Math.random()*0.6+0.2
+        });
+      }
+      function draw() {
+        ctx.clearRect(0,0,w,h);
+        for(const p of particles) {
+          ctx.beginPath();
+          ctx.arc(p.x,p.y,p.r,0,2*Math.PI);
+          ctx.fillStyle = `rgba(30,144,255,${p.o})`;
+          ctx.fill();
+        }
+      }
+      function update() {
+        for(const p of particles) {
+          p.x += p.dx; p.y += p.dy;
+          if(p.x<0||p.x>w) p.dx*=-1;
+          if(p.y<0||p.y>h) p.dy*=-1;
+        }
+      }
+      function loop() {
+        draw(); update();
+        requestAnimationFrame(loop);
+      }
+      loop();
+      window.addEventListener('resize', ()=>{
+        w = canvas.width = header.offsetWidth;
+        h = canvas.height = header.offsetHeight;
+      });
+    }
+    window.addEventListener('DOMContentLoaded', initParticles);
+
+    // Accessibility: skip link focus
+    document.querySelector('.skip-link').addEventListener('click', function() {
+      document.getElementById('about').focus();
+    });
+  </script>
+  <script>
+  const themeToggle = document.getElementById('themeToggle');
+  function setTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    themeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
+    localStorage.setItem('theme', theme);
+  }
+
+  themeToggle.onclick = () => {
+    const current = document.documentElement.getAttribute('data-theme') || 'light';
+    setTheme(current === 'dark' ? 'light' : 'dark');
+  };
+
+  (function () {
+    const saved = localStorage.getItem('theme');
+    if (saved) setTheme(saved);
+    else if (window.matchMedia('(prefers-color-scheme: dark)').matches) setTheme('dark');
+    else setTheme('light');
+  })();
+</script>
+
+<script>window.onload = function() {
+  window.scrollTo(0, 0);
+};
+</script>
+
+</body>
+</html>

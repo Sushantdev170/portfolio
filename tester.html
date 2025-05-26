@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en-US" data-theme="light">
+<head>
+  <script>
+    // Apply theme immediately to prevent flicker
+    (function() {
+      const savedTheme = localStorage.getItem('theme') || 
+        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+  </script>
+  <meta charset="UTF-8" />
+  <title>Portfolio Project – Tester</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --nav-height: 64px;
+      --nav-height-min: 40px;
+      --nav-bg: #23272f;
+      --nav-color: #fff;
+      --accent: #4b9cff;
+      --body-bg: #ffffff;
+      --text-color: #23272f;
+      --container-bg: #fff;
+      --container-shadow: 0 4px 18px rgb(75 156 255 / 44%);
+      --footer-bg: #23272f;
+      --footer-color: #fff;
+      --scrollbar-bg: #e5e9f0;
+      --scrollbar-thumb: #b0b7c3;
+      --scrollbar-thumb-hover: #4b9cff;
+      --transition: 0.3s cubic-bezier(.4,0,.2,1);
+    }
+
+    [data-theme="dark"] {
+      --nav-bg: #181c23;
+      --nav-color: #f1f3f7;
+      --accent: #5bb8ff;
+      --body-bg: #121212;
+      --text-color: #f1f3f7;
+      --container-bg: #23272f;
+      --container-shadow: 0 4px 24px rgba(75, 156, 255, 0.15);
+      --footer-bg: #181c23;
+      --footer-color: #f1f3f7;
+      --scrollbar-bg: #23272f;
+      --scrollbar-thumb: #4b9cff;
+      --scrollbar-thumb-hover: #5bb8ff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--body-bg);
+      color: var(--text-color);
+      transition: background var(--transition), color var(--transition);
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+      width: 12px;
+      background: var(--scrollbar-bg);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--scrollbar-thumb);
+      border-radius: 6px;
+      transition: background 0.3s;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--scrollbar-thumb-hover);
+    }
+    html {
+      scrollbar-width: thin;
+      scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg);
+    }
+
+    /* Navigation Bar */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: var(--nav-height);
+      background: var(--nav-bg);
+      color: var(--nav-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+      z-index: 100;
+      transition: height var(--transition), box-shadow var(--transition), background var(--transition), color var(--transition);
+    }
+
+    nav.minimized {
+      height: var(--nav-height-min);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-back {
+      position: absolute;
+      left: 16px;
+      background: none;
+      border: none;
+      color: var(--nav-color);
+      font-size: 1.5rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 8px;
+      transition: background 0.15s;
+      border-radius: 4px;
+      text-decoration: none;
+      user-select: none;
+    }
+    .nav-back:focus,
+    .nav-back:hover {
+      background: rgba(75, 156, 255, 0.15);
+      outline: none;
+    }
+
+    .nav-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      user-select: none;
+    }
+
+    main {
+      flex: 1 0 auto;
+      margin-top: var(--nav-height);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 32px 16px 80px;
+      min-height: 70vh;
+      background: var(--body-bg);
+      transition: background var(--transition);
+    }
+
+    .project-details-container {
+      width: 100%;
+      max-width: 900px;
+      background: var(--container-bg);
+      border-radius: 16px;
+      box-shadow: var(--container-shadow);
+      padding: 32px 28px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      transition: background var(--transition), box-shadow var(--transition);
+    }
+
+    .project-details-title, .section-title {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: var(--accent);
+      text-align: center;
+      letter-spacing: 1px;
+    }
+
+    .test-category {
+      margin-bottom: 2.5rem;
+      border-left: 4px solid var(--accent);
+      padding-left: 1.2rem;
+      background: var(--container-bg);
+      border-radius: 10px;
+      box-shadow: 0 1px 8px rgba(112,161,255,0.07);
+    }
+
+    /* Responsive Table */
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    .advanced-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.2em 0 1.5em;
+      background: var(--container-bg);
+      color: var(--text-color);
+      font-size: 1em;
+    }
+
+    .advanced-table caption {
+      caption-side: top;
+      font-weight: bold;
+      margin-bottom: 0.5em;
+      color: var(--accent);
+      text-align: left;
+    }
+
+    .advanced-table th, .advanced-table td {
+      border: 1px solid #3a3d4d;
+      padding: 0.6em 0.8em;
+      text-align: left;
+    }
+
+    .advanced-table th {
+      background: var(--nav-bg);
+      color: var(--nav-color);
+    }
+
+    .advanced-table .status.success {
+      color: #18b65e;
+      font-weight: bold;
+    }
+
+    .explanation {
+      margin: 1em 0 0;
+      padding: 0.7em 1em;
+      background: #eaf6ef;
+      border-left: 4px solid var(--accent);
+      font-size: 1em;
+      border-radius: 5px;
+      color: #1a2a1a;
+    }
+
+    .zoom-thumbnail {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-right: 12px;
+      transition: transform 0.3s cubic-bezier(.4,0,.2,1), box-shadow 0.3s;
+      box-shadow: 0 2px 8px rgba(75,156,255,0.10);
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    .zoom-thumbnail:hover {
+      transform: scale(1.5);
+      z-index: 10;
+      box-shadow: 0 6px 24px rgba(75,156,255,0.15);
+    }
+
+    .feature-demo {
+      margin: 0.6em 0 1.2em;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .filter-demo {
+      display: flex;
+      align-items: center;
+      gap: 1em;
+      margin: 1em 0;
+      flex-wrap: wrap;
+    }
+
+    .filter-demo .slideshow {
+      display: flex;
+      gap: 0.8em;
+      flex-wrap: wrap;
+    }
+
+    .filter-demo .slide {
+      background: #f3f4f8;
+      color: #222;
+      padding: 0.7em 1.1em;
+      border-radius: 6px;
+      box-shadow: 0 1px 4px rgba(75,156,255,0.09);
+      font-size: 1em;
+      display: none;
+    }
+
+    .map-demo {
+      display: flex;
+      align-items: center;
+      gap: 1em;
+      margin: 1em 0;
+      flex-wrap: wrap;
+    }
+
+    .map-img {
+      width: 180px;
+      max-width: 100%;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      box-shadow: 0 2px 10px rgba(75,156,255,0.10);
+    }
+
+    .today-btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 0.7em 1.2em;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .today-btn:hover {
+      background: #3a8fdc;
+    }
+
+    footer {
+      width: 100%;
+      background: var(--footer-bg);
+      color: var(--footer-color);
+      text-align: center;
+      font-size: 1rem;
+      padding: 18px 0 14px;
+      letter-spacing: 0.3px;
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      z-index: 50;
+      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+      transition: background var(--transition), color var(--transition);
+    }
+
+    #scrollTopBtn {
+      position: fixed;
+      right: 24px;
+      bottom: 90px;
+      z-index: 300;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      font-size: 2rem;
+      box-shadow: 0 2px 8px rgba(75,156,255,0.18);
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s, background 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #scrollTopBtn.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #scrollTopBtn:focus, #scrollTopBtn:hover {
+      background: #3a8fdc;
+      outline: none;
+    }
+
+    /* Mobile Responsive Styles */
+    @media (max-width: 700px) {
+      .project-details-container {
+        padding: 20px 12px;
+      }
+
+      .section-title {
+        font-size: 1.5rem;
+      }
+
+      .map-img {
+        width: 120px;
+      }
+
+      .zoom-thumbnail {
+        width: 50px;
+        height: 50px;
+      }
+
+      .advanced-table {
+        font-size: 0.9rem;
+      }
+
+      .advanced-table th, .advanced-table td {
+        padding: 0.4em 0.6em;
+      }
+
+      .filter-demo, .map-demo {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 600px) {
+      nav {
+        height: 54px;
+      }
+
+      nav.minimized {
+        height: 36px;
+      }
+
+      main {
+        margin-top: 54px;
+        padding: 20px 8px 70px;
+      }
+
+      .nav-back {
+        left: 12px;
+        font-size: 1.2rem;
+      }
+
+      .nav-title {
+        font-size: 1.1rem;
+      }
+
+      .project-details-container {
+        padding: 16px 8px;
+      }
+
+      .section-title {
+        font-size: 1.3rem;
+      }
+
+      .advanced-table, .advanced-table thead, .advanced-table tbody, .advanced-table th, .advanced-table td, .advanced-table tr {
+        display: block;
+      }
+
+      .advanced-table thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+      }
+
+      .advanced-table tr {
+        margin-bottom: 1rem;
+        border: 1px solid #3a3d4d;
+      }
+
+      .advanced-table td {
+        border: none;
+        border-bottom: 1px solid #eee;
+        position: relative;
+        padding-left: 50%;
+        text-align: left;
+      }
+
+      .advanced-table td:before {
+        content: attr(data-label);
+        position: absolute;
+        left: 8px;
+        width: 45%;
+        padding-right: 10px;
+        font-weight: bold;
+        white-space: nowrap;
+      }
+
+      .advanced-table caption {
+        font-size: 1rem;
+      }
+
+      #scrollTopBtn {
+        right: 8px;
+        bottom: 70px;
+        width: 36px;
+        height: 36px;
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav id="navbar" aria-label="Main Navigation">
+    <a href="index.html" class="nav-back" aria-label="Go Back to Main Page" title="Back to Mainpage" role="button" tabindex="0">
+      ← <span style="font-size: 1rem;">Back</span>
+    </a>
+    <span class="nav-title" aria-current="page">Tester</span>
+  </nav>
+
+  <!-- Main Content -->
+  <main>
+    <div class="project-details-container">
+      <h1 class="section-title">Tester: Rcycle Portal Advanced QA Report</h1>
+      <strong>Brief Discussion of Project</strong>
+      <p>
+        The rCycle Project is a collaborative initiative involving students from Professors Gurasis Singh’s and Nirali Dabhi’s CP4 classes.
+        The project runs from January 1, 2025, to May 1, 2025, and includes several key components: Figma Designs (CP4.14), In-app Tutorials (CP4.8), New Features (CP4.3), Waste Media (CP4.4), and Waste Policy (CP4.4).
+        Professor Gurasis Singh leads the Waste Media and Waste Policy sections, while Professor Nirali Dabhi guides the Figma Designs, In-app Tutorials, and New Features components.
+        The project materials consist of the codebase, design files created in Figma, and all relevant documents stored in the Niagara College Toronto rCycle Google Drive folder.
+        Throughout the project, students use a primary device as their main tool for development and collaboration.
+        This project provides an opportunity for students to apply their skills to real-world challenges related to waste management and technology design.
+      </p>
+      <strong>Let's Talk about the task and its feature.</strong>
+      <p>
+        The rCycle project, developed as part of the PROG1440: Community Sponsored Project course at Niagara College Toronto during the Winter 2025 semester, 
+        represents a pioneering effort to create a smart, community-based recycling application that incentivizes sustainable behavior through a reward system.
+        The project was under Professor Nirali Dabhi. At certain deadlines, we needed to show our work to <b>rCycle Inc.</b>
+      </p>
+      <p>
+        Basically, the project was based on React and NodeJS. There were various feature-demos to implement. The main features:
+      </p>
+
+      <!-- Thumbnail Zoom Feature -->
+      <article class="test-category">
+        <h3>Thumbnail Zoom Feature</h3>
+        <p>
+          Thumbnails offer smooth, resource-efficient zoom on hover, allowing users to inspect details without extra clicks.
+        </p>
+        <div class="feature-demo">
+          <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=thumb&w=100&q=80" alt="Sample Thumbnail" class="zoom-thumbnail" />
+          <img src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=thumb&w=100&q=80" alt="Sample Thumbnail" class="zoom-thumbnail" />
+        </div>
+        <div class="explanation">
+          <strong>Zoom Effect in a Contemporary Timeline Interface.</strong>
+          The zoom thumbnail or hover effect significantly enhances the visual interactivity of a user interface. 
+          By allowing users to preview an enlarged version of an image on hover, it streamlines the browsing experience and reduces the need for additional clicks or page transitions. This functionality supports a cleaner layout by keeping images compact until further detail is required, ensuring a more organized presentation of content. The smooth transition animations also contribute to a polished, modern feel, making the interface more intuitive and visually appealing while maintaining responsiveness across devices.
+        </div>
+      </article>
+
+      <!-- Retailer Filter for Slideshow -->
+      <article class="test-category">
+        <h3>Retailer Filter for Slideshow Banner</h3>
+        <p>
+          The retailer filter personalizes product slideshows, ensuring only relevant items are shown. This improves user experience and avoids irrelevant product displays.
+        </p>
+        <div class="filter-demo">
+          <label for="retailer-select">Retailer:</label>
+          <select id="retailer-select">
+            <option value="all">All</option>
+            <option value="retailer1">Retailer 1</option>
+            <option value="retailer2">Retailer 2</option>
+          </select>
+          <div class="slideshow">
+            <div class="slide" data-retailer="retailer1">Retailer 1 Product</div>
+            <div class="slide" data-retailer="retailer2">Retailer 2 Product</div>
+            <div class="slide" data-retailer="retailer1">Retailer 1 Product 2</div>
+          </div>
+        </div>
+        <div class="explanation">
+          <strong>How does the retailer filter work?</strong>
+          When a retailer is selected from the drop-down, product display is automatically updated by the system by filtering the dataset based on the selected retailer. 
+          The filtering process ensures that only suitable products are fetched and displayed, and not erroneous or irrelevant products are displayed in the slideshow. 
+          Performance optimization processes ensure that filtering and rendering occur smoothly without delay.
+        </div>
+      </article>
+
+      <!-- Map Integration -->
+      <article class="test-category">
+        <h3>Map Integration</h3>
+        <p>
+          Map integration displays scanned item locations, letting users filter, explore, and interact with geodata. Features include smooth zoom/pan, real-time marker updates, and a "Today" button for current logs.
+        </p>
+        <div class="map-demo">
+          <button class="today-btn">Today</button>
+        </div>
+        <div class="explanation">
+          <strong>Why is map integration important?</strong>
+          It enables users to visually analyze and interact with location-based data, with real-time updates and efficient rendering for optimal performance.
+        </div>
+      </article>
+
+      <p>These were the key functions our team collaboratively worked on throughout the project. 
+        I have a comprehensive understanding of the detailed functionalities and sample implementations that required our focus. 
+        Now, in my role as the tester, I will provide an in-depth explanation of each testing section and present the critical bugs 
+        I identified during the development process. This experience has allowed me to apply my skills in quality assurance to ensure a polished, 
+        user-friendly, and robust final product, aligning with my passion for advanced interface designs and visually appealing, interactive web applications.
+      </p>
+
+      <!-- Security Testing -->
+      <article class="test-category">
+        <h2>Security Testing</h2>
+        <h3>Functional Login Testing</h3>
+        <p>
+          The login system was validated for correct and incorrect credential handling, focusing on real-time feedback and robust user guidance.
+        </p>
+        <div class="table-container">
+          <table class="advanced-table">
+            <caption>Login Test Cases</caption>
+            <thead>
+              <tr>
+                <th>Test Case</th>
+                <th>Action</th>
+                <th>Expected Result</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-label="Test Case">Valid Login</td>
+                <td data-label="Action">Enter valid email and password</td>
+                <td data-label="Expected Result">Redirected to homepage/dashboard</td>
+                <td data-label="Status" class="status success">✅</td>
+              </tr>
+              <tr>
+                <td data-label="Test Case">Invalid Login</td>
+                <td data-label="Action">Enter invalid email or wrong password</td>
+                <td data-label="Expected Result">Real-time input validation prompts (e.g., missing '@')</td>
+                <td data-label="Status" class="status success">✅</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="explanation">
+          <strong>Why Real-time Feedback?</strong>
+          Real-time validation prevents unnecessary login attempts, guides users to correct errors before submission, and reduces server load. Email and password fields are checked for format and complexity instantly, blocking submission until inputs are valid.
+        </div>
+
+        <div class="table-container">
+          <table class="advanced-table">
+            <caption>Thumbnail Zoom Feature</caption>
+            <thead>
+              <tr>
+                <th>Test Case</th>
+                <th>Action</th>
+                <th>Expected Result</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-label="Test Case">Hover on thumbnail</td>
+                <td data-label="Action">Hover the mouse pointer on image</td>
+                <td data-label="Expected Result">Smooth zoom animation without lag</td>
+                <td data-label="Status" class="status success">✅</td>
+              </tr>
+              <tr>
+                <td data-label="Test Case">Remove mouse from thumbnail</td>
+                <td data-label="Action">Release the mouse pointer</td>
+                <td data-label="Expected Result">Image returns to original size without glitches</td>
+                <td data-label="Status" class="status success">✅</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="explanation">
+          <strong>Why is the zoom effect relevant?</strong>
+          Zoom functionality improves the user experience since it allows the user to review scanned objects 
+          with greater detail without requiring additional clicks or navigation.
+        </div>
+
+        <div class="table-container">
+          <table class="advanced-table">
+            <caption>Retailer Filter for Slideshow Banner</caption>
+            <thead>
+              <tr>
+                <th>Test Case</th>
+                <th>Action</th>
+                <th>Expected Result</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-label="Test Case">Dropdown filter outcomes</td>
+                <td data-label="Action">Select a retailer from dropdown</td>
+                <td data-label="Expected Result">Only that retailer’s products appear in slideshow</td>
+                <td data-label="Status" class="status success">✅</td>
+              </tr>
+              <tr>
+                <td data-label="Test Case">Outcomes of different retailer option</td>
+                <td data-label="Action">Change retailer selection</td>
+                <td data-label="Expected Result">Slideshow dynamically updates without reload</td>
+                <td data-label="Status" class="status success">✅</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="explanation">
+          <strong>Why is the retailer filter needed?</strong>
+          Retailer filter avoids displaying inappropriate products by allowing users to personalize slideshow banners with genuine offers that are relevant. 
+          User experience is improved through the avoidance of extraneous product display.
+        </div>
+
+        <div class="table-container">
+          <table class="advanced-table">
+            <caption>Map Integration</caption>
+            <thead>
+              <tr>
+                <th>Test Case</th>
+                <th>Action</th>
+                <th>Expected Result</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-label="Test Case">Navigate to Scanned Items page</td>
+                <td data-label="Action">Select the scanned Items options</td>
+                <td data-label="Expected Result">Map loads correctly and quickly</td>
+                <td data-label="Status" class="status success">✅</td>
+              </tr>
+              <tr>
+                <td data-label="Test Case">Zoom/Pan map</td>
+                <td data-label="Action">Zooming in and out the map</td>
+                <td data-label="Expected Result">Smooth navigation with the correct information labelled on it.</td>
+                <td data-label="Status" class="status success">✅</td>
+              </tr>
+              <tr>
+                <td data-label="Test Case">Checking "Checked Box"</td>
+                <td data-label="Action">Use checkboxes to filter items</td>
+                <td data-label="Expected Result">Only corresponding marks or information need to show</td>
+                <td data-label="Status" class="status success">✅</td>
+              </tr>
+              <tr>
+                <td data-label="Test Case">Checking the today Button</td>
+                <td data-label="Action">Press “Today” button</td>
+                <td data-label="Expected Result">Displays current date and time</td>
+                <td data-label="Status" class="status success">✅</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="explanation">
+          <strong>Why is map integration important?</strong>
+          The map provides the visual display of scanned item positions in order to enable users to effectively analyze as well as navigate relevant geographical information. Proper integration ensures users that they will filter, explore, and interact with location-based information successfully. 
+        </div>
+      </article>
+
+      <!-- UI/UX Testing -->
+      <article class="test-category">
+        <h2>UI/UX Testing</h2>
+        <h3>Objectives</h3>
+        <ul>
+          <li>Verify UI consistency and responsiveness</li>
+          <li>Ensure intuitive UX and smooth interaction</li>
+          <li>Test accessibility and usability</li>
+          <li>Identify and fix navigation, filter, and interaction issues</li>
+        </ul>
+        <h3>UI Test Plan</h3>
+        <div class="table-container">
+          <table class="advanced-table">
+            <caption>UI Testing</caption>
+            <thead>
+              <tr>
+                <th>Test Case</th>
+                <th>Outcomes</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-label="Test Case">Button alignment</td>
+                <td data-label="Outcomes">Buttons are properly aligned</td>
+                <td data-label="Status" class="status success">✅</td>
+              </tr>
+              <tr>
+                <td data-label="Test Case">Hover effect</td>
+                <td data-label="Outcomes">Animations trigger without delay</td>
+                <td data-label="Status" class="status success">✅</td>
+              </tr>
+              <tr>
+                <td data-label="Test Case">Color consistency</td>
+                <td data-label="Outcomes">Consistent with brand guidelines</td>
+                <td data-label="Status" class="status success">✅</td>
+              </tr>
+              <tr>
+                <td data-label="Test Case">Mobile responsiveness</td>
+                <td data-label="Outcomes">UI adapts to screen sizes</td>
+                <td data-label="Status" class="status success">✅</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>UX Test Plan</h3>
+        <div class="table-container">
+          <table class="advanced-table">
+            <caption>UX Testing</caption>
+            <thead>
+              <tr>
+                <th>Test Case</th>
+                <th>Outcomes</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-label="Test Case">Retailer filter</td>
+                <td data-label="Outcomes">Shows only relevant products</td>
+                <td data-label="Status" class="status success">✅</td>
+              </tr>
+              <tr>
+                <td data-label="Test Case">Dropdown usability</td>
+                <td data-label="Outcomes">Easy, clear selection</td>
+                <td data-label="Status" class="status success">✅</td>
+              </tr>
+              <tr>
+                <td data-label="Test Case">Error messages</td>
+                <td data-label="Outcomes">Clear, actionable, user-friendly</td>
+                <td data-label="Status" class="status success">✅</td>
+              </tr>
+              <tr>
+                <td data-label="Test Case">Accessibility</td>
+                <td data-label="Outcomes">Screen reader and keyboard support</td>
+                <td data-label="Status" class="status success">✅</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>Testing Methods</h3>
+        <ul>
+          <li>Manual and tool-based alignment checks</li>
+          <li>Cross-browser/device hover and color validation</li>
+          <li>Mobile device and orientation testing</li>
+          <li>Accessibility checks with screen readers and keyboard navigation</li>
+        </ul>
+        <div class="explanation">
+          <strong>Why is UI/UX Testing important?</strong>
+          Proper alignment, feedback, color consistency, and accessibility ensure a professional, inclusive, and enjoyable user experience across all devices.
+        </div>
+      </article>
+
+      <!-- Compatibility Testing -->
+      <article class="test-category">
+        <h2>Compatibility Testing</h2>
+        <h3>Objectives</h3>
+        <ul>
+          <li>Verify functionality across platforms and devices</li>
+          <li>Identify UI/UX inconsistencies on different screens</li>
+          <li>Ensure cross-browser/device compatibility</li>
+          <li>Check performance under various network conditions</li>
+        </ul>
+        <h3>Test Plan & Scenarios</h3>
+        <div class="table-container">
+          <table class="advanced-table">
+            <caption>Compatibility Testing</caption>
+            <thead>
+              <tr>
+                <th>Test Case</th>
+                <th>Outcomes</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-label="Test Case">Windows and mobile devices</td>
+                <td data-label="Outcomes">App functions consistently</td>
+                <td data-label="Status" class="status success">✅</td>
+              </tr>
+              <tr>
+                <td data-label="Test Case">Chrome, Edge</td>
+                <td data-label="Outcomes">UI and functionality remain the same</td>
+                <td data-label="Status" class="status success">✅</td>
+              </tr>
+              <tr>
+                <td data-label="Test Case">5G, 4G, Wi-Fi</td>
+                <td data-label="Outcomes">Efficient loading, no breakage</td>
+                <td data-label="Status" class="status success">✅</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>How is Compatibility Testing Done?</h3>
+        <ul>
+          <li>Run app on multiple Windows/mobile versions</li>
+          <li>Open app in Chrome, Edge, Firefox</li>
+          <li>Test under 5G, 4G, and Wi-Fi conditions</li>
+        </ul>
+        <div class="explanation">
+          <strong>Why is Compatibility Testing important?</strong>
+          Ensures a seamless, frustration-free experience for all users, regardless of their device, browser, or network.
+        </div>
+      </article>
+
+      <!-- Bugs Discovered -->
+      <article class="test-category">
+        <h2>Bugs Found During Testing</h2>
+        <div class="table-container">
+          <table class="advanced-table">
+            <caption>Key Bugs and Fixes</caption>
+            <thead>
+              <tr>
+                <th>Section</th>
+                <th>Issue</th>
+                <th>Impact</th>
+                <th>Proposed Fix</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-label="Section">Production</td>
+                <td data-label="Issue">Retailer options not shown when "Product" is pre-selected</td>
+                <td data-label="Impact">User confusion, improper configuration</td>
+                <td data-label="Proposed Fix">Default dropdown to "Please Select" to force selection</td>
+              </tr>
+              <tr>
+                <td data-label="Section">Validation Weakness</td>
+                <td data-label="Issue">In the "Product Banner" section, even if the user reselects the retailer option to "Select Retailer", 
+                  the system still allows the banner to be uploaded.</td>
+                <td data-label="Impact">Allows incomplete or incorrect data to be submitted, which may result in broken display elements or mislinked data.</td>
+                <td data-label="Proposed Fix">Implement stricter form validation that prevents submission if the retailer is not properly selected.</td>
+              </tr>
+              <tr>
+                <td data-label="Section">Product Banner</td>
+                <td data-label="Issue">Allows upload when retailer not selected</td>
+                <td data-label="Impact">Broken display, mislinked data</td>
+                <td data-label="Proposed Fix">Stricter form validation; block upload if invalid</td>
+              </tr>
+              <tr>
+                <td data-label="Section">Delete Function</td>
+                <td data-label="Issue">Item remains visible after deletion until refresh</td>
+                <td data-label="Impact">UI inconsistency, user confusion</td>
+                <td data-label="Proposed Fix">Remove item immediately and show confirmation</td>
+              </tr>
+              <tr>
+                <td data-label="Section">Information on map</td>
+                <td data-label="Issue">On the map view, there are two types of icons used: a recycle icon and a trash icon. 
+                  While the recycle icon has an associated color fill dot (used as a status indicator), the trash icon does not.</td>
+                <td data-label="Impact">Inconsistent UI leads to user confusion and fails to represent the status clearly for trash-related items.</td>
+                <td data-label="Proposed Fix">Check the code for the trash icon component and ensure it includes the same status-based color indicator logic as the recycle icon.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    © 2025 Sushant Mainali. All rights reserved.
+  </footer>
+
+  <!-- Scroll to Top Button -->
+  <button id="scrollTopBtn" aria-label="Scroll to top" title="Back to top">↑</button>
+
+  <!-- JavaScript -->
+  <script>
+    // Navbar minimize on scroll
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 40) {
+        navbar.classList.add('minimized');
+      } else {
+        navbar.classList.remove('minimized');
+      }
+    });
+
+    // Back button functionality
+    document.querySelector('.nav-back').addEventListener('click', function(event) {
+      event.preventDefault();
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = '/';
+      }
+    });
+
+    // Theme sync: apply theme from localStorage and listen for changes
+    const htmlEl = document.documentElement;
+    function applyThemeFromStorage() {
+      let theme = localStorage.getItem('theme');
+      if (!theme) {
+        theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      htmlEl.setAttribute('data-theme', theme);
+    }
+    applyThemeFromStorage();
+
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'theme') {
+        applyThemeFromStorage();
+      }
+    });
+
+    // Retailer filter and map button
+    document.addEventListener('DOMContentLoaded', function() {
+      // Retailer filter for slideshow
+      const select = document.getElementById('retailer-select');
+      const slides = document.querySelectorAll('.slideshow .slide');
+      function filterSlides() {
+        const val = select.value;
+        slides.forEach(slide => {
+          slide.style.display = (val === 'all' || slide.dataset.retailer === val) ? 'block' : 'none';
+        });
+      }
+      if (select) {
+        select.addEventListener('change', filterSlides);
+        filterSlides();
+      }
+
+      // Today button for map demo
+      const todayBtn = document.querySelector('.today-btn');
+      if (todayBtn) {
+        todayBtn.addEventListener('click', function() {
+          todayBtn.textContent = "Today: " + new Date().toLocaleString();
+          setTimeout(() => todayBtn.textContent = "Today", 3000);
+        });
+      }
+
+      // Scroll to top button
+      const scrollBtn = document.getElementById('scrollTopBtn');
+      function toggleScrollBtn() {
+        if (window.scrollY > 200) {
+          scrollBtn.classList.add('show');
+        } else {
+          scrollBtn.classList.remove('show');
+        }
+      }
+      if (scrollBtn) {
+        window.addEventListener('scroll', toggleScrollBtn);
+        scrollBtn.addEventListener('click', function() {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        toggleScrollBtn();
+      }
+    });
+  </script>
+</body>
+</html>
