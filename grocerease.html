@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en-US" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <title>Portfolio Project – GrocerEase</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --nav-height: 64px;
+      --nav-height-min: 40px;
+      --nav-bg: #23272f;
+      --nav-color: #fff;
+      --accent: #4b9cff;
+      --accent-gradient: linear-gradient(90deg, #4b9cff 0%, #6be0ff 100%);
+      --body-bg: #f4f6fa;
+      --text-color: #23272f;
+      --container-bg: rgba(255,255,255,0.85);
+      --container-shadow: 0 8px 32px rgba(75, 156, 255, 0.16);
+      --footer-bg: #23272f;
+      --footer-color: #fff;
+      --scrollbar-bg: #e5e9f0;
+      --scrollbar-thumb: #b0b7c3;
+      --scrollbar-thumb-hover: #4b9cff;
+      --transition: 0.3s cubic-bezier(.4,0,.2,1);
+      --glass-blur: blur(8px);
+      --radius: 18px;
+    }
+
+    [data-theme="dark"] {
+      --nav-bg: #181c23;
+      --nav-color: #f1f3f7;
+      --accent: #5bb8ff;
+      --accent-gradient: linear-gradient(90deg, #5bb8ff 0%, #9ee7ff 100%);
+      --body-bg: #181c23;
+      --text-color: #f1f3f7;
+      --container-bg: rgba(35,39,47,0.7);
+      --container-shadow: 0 8px 32px rgba(75, 156, 255, 0.23);
+      --footer-bg: #181c23;
+      --footer-color: #f1f3f7;
+      --scrollbar-bg: #23272f;
+      --scrollbar-thumb: #4b9cff;
+      --scrollbar-thumb-hover: #5bb8ff;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--body-bg);
+      color: var(--text-color);
+      transition: background var(--transition), color var(--transition);
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: var(--body-bg);
+      color: var(--text-color);
+    }
+
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+      width: 12px;
+      background: var(--scrollbar-bg);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--scrollbar-thumb);
+      border-radius: 6px;
+      transition: background 0.3s;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--scrollbar-thumb-hover);
+    }
+    html {
+      scrollbar-width: thin;
+      scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg);
+    }
+
+    /* NAVIGATION BAR */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: var(--nav-height);
+      background: var(--nav-bg);
+      color: var(--nav-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+      z-index: 100;
+      transition: height var(--transition), box-shadow var(--transition), background var(--transition), color var(--transition);
+    }
+
+    nav.minimized {
+      height: var(--nav-height-min);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-back {
+      position: absolute;
+      left: 24px;
+      background: none;
+      border: none;
+      color: var(--nav-color);
+      font-size: 1.5rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      text-decoration: none;
+      user-select: none;
+      transition: background 0.15s;
+    }
+    .nav-back:focus,
+    .nav-back:hover {
+      background: rgba(75, 156, 255, 0.15);
+      outline: none;
+    }
+
+    .nav-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      user-select: none;
+      text-shadow: 0 2px 8px rgba(75, 156, 255, 0.08);
+    }
+
+    main {
+      flex: 1 0 auto;
+      margin-top: var(--nav-height);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 48px 16px 80px 16px;
+      min-height: 70vh;
+      background: var(--body-bg);
+      transition: background var(--transition);
+    }
+
+    .project-details-container {
+      width: 100%;
+      max-width: 820px;
+      background: var(--container-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--container-shadow);
+      padding: 42px 38px 38px 38px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      transition: background var(--transition), box-shadow var(--transition);
+      backdrop-filter: var(--glass-blur);
+      border: 1.5px solid rgba(75, 156, 255, 0.12);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-details-title {
+      font-size: 2.1rem;
+      font-weight: 800;
+      color: var(--accent);
+      margin-bottom: 18px;
+      letter-spacing: 1.2px;
+      transition: color var(--transition);
+      position: relative;
+      display: inline-block;
+    }
+    .project-details-title::after {
+      content: "";
+      display: block;
+      height: 4px;
+      width: 60%;
+      background: var(--accent-gradient);
+      border-radius: 2px;
+      margin-top: 8px;
+      animation: underline 1s cubic-bezier(.4,0,.2,1);
+    }
+    @keyframes underline {
+      from { width: 0; }
+      to { width: 60%; }
+    }
+
+    .project-details-text {
+      font-size: 1.17rem;
+      line-height: 1.75;
+      color: var(--text-color);
+      transition: color var(--transition);
+      padding-bottom: 10px;
+    }
+
+    .project-details-text h2, .project-details-text h3 {
+      color: var(--accent);
+      margin-top: 32px;
+      margin-bottom: 14px;
+      font-weight: 700;
+      letter-spacing: 0.7px;
+      text-shadow: 0 2px 8px rgba(75, 156, 255, 0.07);
+    }
+    .project-details-text h2 {
+      font-size: 1.35rem;
+      border-left: 5px solid var(--accent);
+      padding-left: 12px;
+      background: linear-gradient(90deg,rgba(75,156,255,0.08) 0%,transparent 100%);
+      border-radius: 6px;
+    }
+    .project-details-text h3 {
+      font-size: 1.15rem;
+      margin-top: 22px;
+      margin-bottom: 10px;
+    }
+
+    .project-details-text ul {
+      margin-bottom: 18px;
+      padding-left: 24px;
+      list-style: disc inside;
+    }
+    .project-details-text li {
+      margin-bottom: 9px;
+      padding-left: 2px;
+      transition: color 0.2s;
+    }
+    .project-details-text li::marker {
+      color: var(--accent);
+    }
+
+    .project-details-text p {
+      margin-bottom: 18px;
+    }
+
+    .project-details-text strong {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .project-details-text a {
+      color: var(--accent);
+      text-decoration: underline;
+      transition: color 0.2s;
+    }
+    .project-details-text a:hover {
+      color: #1a6ed8;
+    }
+
+    .project-details-text img {
+      max-width: 100%;
+      border-radius: 12px;
+      margin: 18px 0;
+      box-shadow: 0 4px 18px rgba(75,156,255,0.12);
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .project-details-text figcaption {
+      font-size: 0.98rem;
+      font-style: italic;
+      color: #888;
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    footer {
+      width: 100vw;
+      background: var(--footer-bg);
+      color: var(--footer-color);
+      text-align: center;
+      font-size: 1.1rem;
+      padding: 22px 0 18px 0;
+      letter-spacing: 0.4px;
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      z-index: 50;
+      box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.07);
+      transition: background var(--transition), color var(--transition);
+    }
+
+    @media (max-width: 700px) {
+      .project-details-container {
+        padding: 18px 6px;
+      }
+      nav {
+        height: 54px;
+      }
+      nav.minimized {
+        height: 36px;
+      }
+      main {
+        margin-top: 54px;
+        padding: 14px 2px 70px 2px;
+      }
+      .project-details-title {
+        font-size: 1.3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVIGATION BAR -->
+  <nav id="navbar" aria-label="Main Navigation">
+    <a href="index.html" 
+       class="nav-back" 
+       aria-label="Go Back to Main Page" 
+       title="Back to Mainpage" 
+       role="button" 
+       tabindex="0">
+      &#8592; <span style="font-size: 1rem;">Back</span>
+    </a>
+    <span class="nav-title" aria-current="page">App</span>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main>
+    <div class="project-details-container">
+      <div class="project-details-title">GrocerEase</div>
+      <div class="project-details-text" id="projectText">
+        <h2>Project Overview</h2>
+        <p>
+          GrocerEase is a comprehensive grocery management application developed to modernize and automate the core operations of grocery businesses. The system is built using Microsoft PowerApps for the user interface and SharePoint Online for data storage and management. This integration allows for the creation of custom forms, automated workflows, and enhanced collaboration, all without the need for manual coding.
+        </p>
+        <h3>Key Features and Innovations</h3>
+        <ul>
+          <li><strong>Automated Inventory Management:</strong> Real-time tracking of inventory, automatically updating stock levels as orders are placed. This reduces manual errors and ensures accurate, up-to-date records.</li>
+          <li><strong>Secure User Authentication:</strong> Uses SharePoint lists for secure login and role management, ensuring only authorized users can access sensitive features.</li>
+          <li><strong>Order Processing:</strong> Users can easily place and track orders through an intuitive interface. Orders are logged and managed centrally, streamlining fulfillment and reducing paperwork.</li>
+          <li><strong>Feedback Mechanism:</strong> Built-in feedback collection allows customers to submit suggestions or issues, which are logged in SharePoint for continuous improvement.</li>
+          <li><strong>Responsive Design:</strong> Designed for both desktop and mobile use, increasing accessibility and flexibility for staff and customers.</li>
+        </ul>
+        <h3>Technical Approach</h3>
+        <ul>
+          <li><strong>PowerApps and SharePoint Integration:</strong> Leverages PowerApps to customize SharePoint forms and create tailored user experiences. Fields and control types can be adjusted as needed, and conditional formatting or validation rules can be applied without coding. SharePoint serves as the secure, centralized data source, and PowerApps provides the front-end logic and user interface.</li>
+          <li><strong>Custom SharePoint Lists:</strong> Dedicated lists for inventory, user credentials, orders, feedback, and mirrored inventory data. This structure supports all business functions and ensures data consistency.</li>
+          <li><strong>Automation:</strong> Workflows automate order processing, inventory updates, and notifications, including low-stock alerts to prevent outages.</li>
+          <li><strong>Document Management:</strong> Integration with SharePoint also allows for document storage and management within the app, enhancing collaboration and record-keeping.</li>
+        </ul>
+        <h3>Project Scope and Objectives</h3>
+        <ul>
+          <li>Streamline inventory management, order processing, and customer feedback in a single, unified platform.</li>
+          <li>Reduce manual data entry and errors, improve efficiency, and enhance customer experience.</li>
+          <li>Provide a scalable and cost-effective solution suitable for small and medium-sized grocery businesses.</li>
+          <li>Enable customization and future expansion, such as predictive analytics, advanced reporting, and integration with payment and delivery systems.</li>
+        </ul>
+        <h3>Comparison to Previous Solutions</h3>
+        <p>
+          Traditional manual methods and commercial POS systems were either too basic or too complex and expensive for small businesses. While low-code platforms like PowerApps and SharePoint offer flexibility and automation, GrocerEase distinguishes itself by tailoring these technologies specifically for grocery management, filling gaps in affordability, usability, and integration.
+        </p>
+        <h3>Results and Future Plans</h3>
+        <p>
+          Testing has confirmed that GrocerEase reduces errors, increases operational efficiency, and improves user satisfaction. Planned enhancements include predictive analytics for inventory forecasting, integration with payment and delivery platforms, and multi-language support. The platform’s architecture allows for easy customization and scalability as business needs evolve.
+        </p>
+        <h3>Conclusion</h3>
+        <p>
+          GrocerEase stands out as a modern, user-friendly, and scalable grocery management system. By leveraging PowerApps and SharePoint integration, it automates critical business processes, enhances data security, and supports continuous improvement, making it a practical solution for grocery businesses seeking digital transformation.
+        </p>
+        <p>That's a brief discussion about the app for the more details and well documentation please  <a href="Grocery_Management_System_ ProjectReport.pdf" target="_blank" rel="noopener noreferrer">click the link.</a></p>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    &copy; 2025 Sushant Mainali. All rights reserved.
+  </footer>
+
+  <!-- JAVASCRIPT -->
+  <script>
+    // Navbar minimize on scroll
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 40) {
+        navbar.classList.add('minimized');
+      } else {
+        navbar.classList.remove('minimized');
+      }
+    });
+
+    // Theme sync: apply theme from localStorage and listen for changes
+    const htmlEl = document.documentElement;
+    function applyThemeFromStorage() {
+      let theme = localStorage.getItem('theme');
+      if (!theme) {
+        theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      htmlEl.setAttribute('data-theme', theme);
+    }
+    applyThemeFromStorage();
+
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'theme') {
+        applyThemeFromStorage();
+      }
+    });
+  </script>
+</body>
+</html>
