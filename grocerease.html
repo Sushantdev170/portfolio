@@ -75,6 +75,7 @@
     html {
       scrollbar-width: thin;
       scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg);
+      scroll-behavior: smooth;
     }
 
     /* NAVIGATION BAR */
@@ -114,11 +115,12 @@
       border-radius: 4px;
       text-decoration: none;
       user-select: none;
-      transition: background 0.15s;
+      transition: background 0.15s, transform 0.2s ease;
     }
     .nav-back:focus,
     .nav-back:hover {
       background: rgba(75, 156, 255, 0.15);
+      transform: scale(1.05);
       outline: none;
     }
 
@@ -138,8 +140,11 @@
       align-items: flex-start;
       padding: 48px 16px 80px 16px;
       min-height: 70vh;
-      background: var(--body-bg);
+      background: linear-gradient(135deg, rgba(75, 156, 255, 0.05) 0%, rgba(255, 255, 255, 0.05) 100%);
       transition: background var(--transition);
+    }
+    [data-theme="dark"] main {
+      background: linear-gradient(135deg, rgba(75, 156, 255, 0.1) 0%, rgba(35, 39, 47, 0.1) 100%);
     }
 
     .project-details-container {
@@ -153,11 +158,15 @@
       display: flex;
       flex-direction: column;
       gap: 20px;
-      transition: background var(--transition), box-shadow var(--transition);
+      transition: background var(--transition), box-shadow var(--transition), transform 0.3s ease;
       backdrop-filter: var(--glass-blur);
       border: 1.5px solid rgba(75, 156, 255, 0.12);
       position: relative;
       overflow: hidden;
+    }
+    .project-details-container:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 36px rgba(75, 156, 255, 0.2);
     }
 
     .project-details-title {
@@ -191,6 +200,17 @@
       color: var(--text-color);
       transition: color var(--transition);
       padding-bottom: 10px;
+      animation: fadeIn 1s ease-out forwards;
+    }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(15px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .project-details-text h2, .project-details-text h3 {
@@ -200,6 +220,8 @@
       font-weight: 700;
       letter-spacing: 0.7px;
       text-shadow: 0 2px 8px rgba(75, 156, 255, 0.07);
+      position: relative;
+      display: inline-block;
     }
     .project-details-text h2 {
       font-size: 1.35rem;
@@ -213,6 +235,19 @@
       margin-top: 22px;
       margin-bottom: 10px;
     }
+    .project-details-text h2::after, .project-details-text h3::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 3px;
+      bottom: -4px;
+      left: 0;
+      background: var(--accent-gradient);
+      transition: width 0.3s ease;
+    }
+    .project-details-text h2:hover::after, .project-details-text h3:hover::after {
+      width: 100%;
+    }
 
     .project-details-text ul {
       margin-bottom: 18px;
@@ -222,7 +257,12 @@
     .project-details-text li {
       margin-bottom: 9px;
       padding-left: 2px;
-      transition: color 0.2s;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+    .project-details-text li:hover {
+      transform: translateX(5px);
+      background: linear-gradient(90deg, rgba(75, 156, 255, 0.1) 0%, transparent 100%);
+      border-radius: 4px;
     }
     .project-details-text li::marker {
       color: var(--accent);
@@ -254,6 +294,11 @@
       display: block;
       margin-left: auto;
       margin-right: auto;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .project-details-text img:hover {
+      transform: scale(1.03);
+      box-shadow: 0 8px 24px rgba(75, 156, 255, 0.2);
     }
     .project-details-text figcaption {
       font-size: 0.98rem;
@@ -297,6 +342,49 @@
         font-size: 1.3rem;
       }
     }
+
+    /* Scroll to Top Button Styling */
+    #scrollTopBtn {
+      position: fixed;
+      right: 24px;
+      bottom: 90px;
+      z-index: 300;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      font-size: 2rem;
+      box-shadow: 0 2px 8px rgba(75,156,255,0.18);
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s, background 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #scrollTopBtn.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #scrollTopBtn:focus, #scrollTopBtn:hover {
+      background: #3a8fdc;
+      outline: none;
+    }
+
+    @media (max-width: 600px) {
+      #scrollTopBtn {
+        right: 8px;
+        bottom: 70px;
+        width: 36px;
+        height: 36px;
+        font-size: 1.2rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -308,7 +396,7 @@
        title="Back to Mainpage" 
        role="button" 
        tabindex="0">
-      &#8592; <span style="font-size: 1rem;">Back</span>
+      ← <span style="font-size: 1rem;">Back</span>
     </a>
     <span class="nav-title" aria-current="page">App</span>
   </nav>
@@ -356,15 +444,18 @@
         <p>
           GrocerEase stands out as a modern, user-friendly, and scalable grocery management system. By leveraging PowerApps and SharePoint integration, it automates critical business processes, enhances data security, and supports continuous improvement, making it a practical solution for grocery businesses seeking digital transformation.
         </p>
-        <p>That's a brief discussion about the app for the more details and well documentation please  <a href="https://drive.google.com/file/d/1ADpyLHXjziAUUf6T5Z2rXWAezCDwXChu/view?usp=sharing" target="_blank" rel="noopener noreferrer">click the link.</a></p>
+        <p>That's a brief discussion about the app. For more details and full documentation, please <a href="https://docs.google.com/document/d/1Tb4-yfxIpV4rNAXwsZ9RwSK-VgeDJX6y/edit?usp=sharing&ouid=115132024890221850629&rtpof=true&sd=true" target="_blank" rel="noopener noreferrer">click here</a>.</p>
       </div>
     </div>
   </main>
 
   <!-- FOOTER -->
   <footer>
-    &copy; 2025 Sushant Mainali. All rights reserved.
+    © 2025 Sushant Mainali. All rights reserved.
   </footer>
+
+  <!-- Scroll to Top Button -->
+  <button id="scrollTopBtn" aria-label="Scroll to top" title="Back to top">↑</button>
 
   <!-- JAVASCRIPT -->
   <script>
@@ -394,6 +485,23 @@
         applyThemeFromStorage();
       }
     });
+
+    // Scroll to top button
+    const scrollBtn = document.getElementById('scrollTopBtn');
+    function toggleScrollBtn() {
+      if (window.scrollY > 200) {
+        scrollBtn.classList.add('show');
+      } else {
+        scrollBtn.classList.remove('show');
+      }
+    }
+    if (scrollBtn) {
+      window.addEventListener('scroll', toggleScrollBtn);
+      scrollBtn.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+      toggleScrollBtn();
+    }
   </script>
 </body>
 </html>
