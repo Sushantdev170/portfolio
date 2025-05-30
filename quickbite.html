@@ -1,0 +1,451 @@
+```html
+<!DOCTYPE html>
+<html lang="en-US" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <title>Portfolio Project – QuickBite</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --nav-height: 80px;
+      --nav-height-min: 48px;
+      --nav-bg: #23272f;
+      --nav-color: #fff;
+      --accent: #4b9cff;
+      --body-bg: #f4f6fa;
+      --text-color: #23272f;
+      --container-bg: #fff;
+      --container-shadow: 0 4px 18px rgba(75, 156, 255, 0.08);
+      --footer-bg: #23272f;
+      --footer-color: #fff;
+      --scrollbar-bg: #e5e9f0;
+      --scrollbar-thumb: #b0b7c3;
+      --scrollbar-thumb-hover: #4b9cff;
+      --transition: 0.3s cubic-bezier(.4,0,.2,1);
+    }
+
+    [data-theme="dark"] {
+      --nav-bg: #181c23;
+      --nav-color: #f1f3f7;
+      --accent: #5bb8ff;
+      --body-bg: #121212;
+      --text-color: #f1f3f7;
+      --container-bg: #23272f;
+      --container-shadow: 0 4px 24px rgba(75, 156, 255, 0.15);
+      --footer-bg: #181c23;
+      --footer-color: #f1f3f7;
+      --scrollbar-bg: #23272f;
+      --scrollbar-thumb: #4b9cff;
+      --scrollbar-thumb-hover: #5bb8ff;
+    }
+
+    html {
+      height: 100%;
+      background: var(--body-bg);
+      color: var(--text-color);
+      transition: background var(--transition), color var(--transition);
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: var(--body-bg);
+      color: var(--text-color);
+    }
+
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+      width: 12px;
+      background: var(--scrollbar-bg);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--scrollbar-thumb);
+      border-radius: 6px;
+      transition: background 0.3s;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--scrollbar-thumb-hover);
+    }
+    html {
+      scrollbar-width: thin;
+      scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg);
+    }
+
+    /* NAVIGATION BAR */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: var(--nav-height);
+      background: var(--nav-bg);
+      color: var(--nav-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+      z-index: 100;
+      transition: height var(--transition), box-shadow var(--transition), background var(--transition), color var(--transition);
+    }
+
+    nav.minimized {
+      height: var(--nav-height-min);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-back {
+      position: absolute;
+      left: 24px;
+      background: none;
+      border: none;
+      color: var(--nav-color);
+      font-size: 1.6rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      text-decoration: none;
+      user-select: none;
+      transition: background 0.15s;
+    }
+    .nav-back:focus,
+    .nav-back:hover {
+      background: rgba(75, 156, 255, 0.15);
+      outline: none;
+    }
+
+    .nav-title {
+      font-size: 1.35rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      user-select: none;
+    }
+
+    main {
+      flex: 1 0 auto;
+      margin-top: var(--nav-height);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 32px 16px 80px 16px;
+      min-height: 70vh;
+      background: var(--body-bg);
+      transition: background var(--transition);
+    }
+
+    .project-details-container {
+      width: 100%;
+      max-width: 720px;
+      background: var(--container-bg);
+      border-radius: 12px;
+      box-shadow: var(--container-shadow);
+      padding: 32px 28px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      transition: background var(--transition), box-shadow var(--transition);
+    }
+
+    .project-details-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 8px;
+      letter-spacing: 0.5px;
+      text-align: center;
+      transition: color var(--transition);
+    }
+
+    .project-details-text {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--text-color);
+      transition: color var(--transition);
+    }
+
+    .project-details-text h2 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin: 1.5em 0 0.75em;
+      position: relative;
+      padding-left: 24px;
+    }
+
+    .project-details-text h2::before {
+      content: '◆';
+      color: var(--accent);
+      position: absolute;
+      left: 0;
+      top: 2px;
+    }
+
+    .project-details-text p {
+      margin-bottom: 1.2em;
+      opacity: 0.9;
+    }
+
+    .project-details-text ul {
+      list-style: none;
+      margin-left: 0;
+      margin-bottom: 1.2em;
+    }
+
+    .project-details-text li {
+      position: relative;
+      padding-left: 24px;
+      margin-bottom: 0.6em;
+      transition: transform var(--transition);
+    }
+
+    .project-details-text li::before {
+      content: '→';
+      color: var(--accent);
+      position: absolute;
+      left: 0;
+      top: 2px;
+    }
+
+    .project-details-text li:hover {
+      transform: translateX(8px);
+    }
+
+    .image-placeholder {
+      width: 100%;
+      max-width: 400px;
+      aspect-ratio: 16 / 9;
+      margin: 16px auto;
+      padding: 0;
+      overflow: hidden;
+      border-radius: 8px;
+      transition: background var(--transition);
+    }
+
+    .project-details-text img {
+      width: 100%;
+      height: 100%;
+      object-fit: scale-down;
+      display: block;
+      border-radius: 8px;
+    }
+
+    .scroll-top-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--accent);
+      color: var(--nav-color);
+      border: none;
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity var(--transition), visibility var(--transition), background var(--transition);
+      z-index: 100;
+    }
+
+    .scroll-top-btn.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .scroll-top-btn:hover {
+      background: var(--scrollbar-thumb-hover);
+    }
+
+    /* FOOTER */
+    footer {
+      width: 100vw;
+      background: var(--footer-bg);
+      color: var(--footer-color);
+      text-align: center;
+      font-size: 1rem;
+      padding: 16px 0;
+      letter-spacing: 0.3px;
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      z-index: 50;
+      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+      transition: background var(--transition), color var(--transition);
+    }
+
+    @media (max-width: 600px) {
+      .project-details-container {
+        padding: 20px 12px;
+      }
+      .project-details-title {
+        font-size: 1.4rem;
+      }
+      .project-details-text {
+        font-size: 1rem;
+      }
+      .project-details-text h2 {
+        font-size: 1.2rem;
+      }
+      nav {
+        height: 64px;
+      }
+      nav.minimized {
+        height: 40px;
+      }
+      main {
+        margin-top: 64px;
+        padding: 20px 8px 70px 8px;
+      }
+      .image-placeholder {
+        max-width: 300px;
+        aspect-ratio: 16 / 9;
+      }
+      .project-details-text img {
+        width: 100%;
+        height: 100%;
+      }
+      .scroll-top-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVIGATION BAR -->
+  <nav id="navbar" aria-label="Main Navigation">
+    <a href="index.html" 
+       class="nav-back" 
+       aria-label="Go Back to Main Page" 
+       title="Back to Mainpage" 
+       role="button" 
+       tabindex="0">
+      ← <span style="font-size: 1rem;">Back</span>
+    </a>
+    <span class="nav-title" aria-current="page">QuickBite</span>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main>
+    <div class="project-details-container">
+      <div class="project-details-title">QuickBite</div>
+      <div class="project-details-text" id="projectText">
+        <h2>Project Overview</h2>
+        <p>QuickBite is a mobile application built with Xamarin.Forms, C#, and XAML to streamline restaurant ordering. It enables direct ordering from restaurants, bypassing third-party platforms, with a responsive, user-friendly interface. Integrated with Firebase, it offers real-time database synchronization, secure authentication, and scalable cloud services.</p>
+        <div class="image-placeholder">
+          <img src="image/Quickbite.png" alt="QuickBite App Screenshot" loading="lazy"/>
+        </div>
+
+        <h2>Objective</h2>
+        <p>QuickBite aims to provide a fast, intuitive, and secure food ordering platform, prioritizing seamless user experience, real-time updates, and secure access. Its modular design supports future enhancements like payment gateways, push notifications, and multi-language support.</p>
+
+        <h2>My Contributions</h2>
+        <p>As a key developer, I contributed to both front-end and back-end development:</p>
+        <ul>
+          <li>Designed and developed the Item Detail Page, showcasing item images, pricing, and descriptions.</li>
+          <li>Integrated Firebase Firestore with the Profile Page for secure user data management.</li>
+          <li>Implemented form validation to ensure data integrity and enhance user experience.</li>
+          <li>Built an email-based password reset system using Firebase Authentication.</li>
+          <li>Assisted in creating technical documentation for project presentation.</li>
+        </ul>
+
+        <h2>Tech Stack</h2>
+        <ul>
+          <li>Frontend: Xamarin.Forms, XAML</li>
+          <li>Backend: C#</li>
+          <li>Database & Services: Firebase Authentication, Firestore, Realtime Database, Storage</li>
+          <li>Tools: Visual Studio, Firebase Console</li>
+        </ul>
+
+        <h2>Key Features</h2>
+        <ul>
+          <li>Secure user registration, login, and password recovery via Firebase Authentication.</li>
+          <li>Real-time menu updates managed through Cloud Firestore.</li>
+          <li>Streamlined cart and order process for adding items and adjusting quantities.</li>
+          <li>Secure cloud synchronization of user data, order histories, and restaurant information.</li>
+          <li>Mobile-friendly, responsive UI with intuitive navigation.</li>
+        </ul>
+
+        <h2>Challenges Solved</h2>
+        <p>I tackled challenges in real-time Firebase synchronization, form validation logic, and consistent UI behavior across platforms, strengthening my expertise in cross-platform development, cloud integration, and user-focused mobile apps.</p>
+
+        <h2>Future Enhancements</h2>
+        <ul>
+          <li>Integration of payment gateways (e.g., Stripe, PayPal).</li>
+          <li>Push notifications via Firebase Cloud Messaging.</li>
+          <li>Live order tracking.</li>
+          <li>Multi-language support for global users.</li>
+        </ul>
+        <p>That's a brief discussion about the app. For more details and full documentation, please <a href="https://drive.google.com/file/d/1Um6bjYHBP_zydMQpxuQgdzZA4WUWmzka/view?usp=sharing" target="_blank" rel="noopener noreferrer">click here</a>.</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- SCROLL TO TOP BUTTON -->
+  <button class="scroll-top-btn" aria-label="Scroll to Top" title="Back to Top">
+    ↑
+  </button>
+
+  <!-- FOOTER -->
+  <footer>
+    © 2025 Sushant Mainali. All rights reserved.
+  </footer>
+
+  <!-- JAVASCRIPT -->
+  <script>
+    // Navbar minimize on scroll
+    const navbar = document.getElementById('navbar');
+    const scrollTopBtn = document.querySelector('.scroll-top-btn');
+
+    window.addEventListener('scroll', () => {
+      // Navbar minimization
+      if (window.scrollY > 40) {
+        navbar.classList.add('minimized');
+      } else {
+        navbar.classList.remove('minimized');
+      }
+
+      // Scroll to top button visibility
+      if (window.scrollY > 200) {
+        scrollTopBtn.classList.add('visible');
+      } else {
+        scrollTopBtn.classList.remove('visible');
+      }
+    });
+
+    // Scroll to top functionality
+    scrollTopBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Theme sync: apply theme from localStorage and listen for changes
+    const htmlEl = document.documentElement;
+    function applyThemeFromStorage() {
+      let theme = localStorage.getItem('theme');
+      if (!theme) {
+        theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      htmlEl.setAttribute('data-theme', theme);
+    }
+    applyThemeFromStorage();
+
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'theme') {
+        applyThemeFromStorage();
+      }
+    });
+  </script>
+</body>
+</html>
+```
