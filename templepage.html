@@ -262,6 +262,15 @@
         applyThemeFromStorage();
       }
     });
+    // Back button functionality
+    document.querySelector('.nav-back').addEventListener('click', function(event) {
+      event.preventDefault();
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = '/';
+      }
+    });
   </script>
 </body>
 </html>
